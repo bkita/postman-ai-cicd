@@ -1,0 +1,56 @@
+# =========================
+# Node.js
+# =========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# OS / Editor
+# =========================
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# Newman / Reports
+# =========================
+reports/
+newman/
+*.html
+
+# =========================
+# Postman artifacts (generated)
+# =========================
+dist/
+postman/generated/
+postman/**/generated/
+
+# =========================
+# Local Postman scripts
+# =========================
+scripts/exportPostmanCollection.js
+scripts/exportPostmanEnvironment.js
+
+# =========================
+# Temporary / build files
+# =========================
+tmp/
+temp/
+.cache/
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
