@@ -22,7 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run Postman tests with Newman          
+      - name: Run Postman tests with Newman
+        env:
+          POSTMAN_COLLECTION_NAME: ${{ vars.POSTMAN_COLLECTION_NAME }}
+          POSTMAN_COLLECTION_EXPORT_PATH: ${{ vars.POSTMAN_COLLECTION_EXPORT_PATH }}
+          POSTMAN_ENVIRONMENT_NAME: ${{ vars.POSTMAN_ENVIRONMENT_NAME }}
+          POSTMAN_ENVIRONMENT_EXPORT_PATH: ${{ vars.POSTMAN_ENVIRONMENT_EXPORT_PATH }}
+          REPORT_DIR: ${{ vars.REPORT_DIR }}
+                    
         run: npm run pm:test
 
       - name: Upload Newman report
