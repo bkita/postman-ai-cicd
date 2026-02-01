@@ -2855,11 +2855,145 @@
               "createdAt": "2026-02-01T11:29:09.000Z",
               "updatedAt": "2026-02-01T11:42:50.000Z",
               "uid": "31090462-ca2d2052-f15e-46bb-a22a-d60b73f85ab2"
+            },
+            {
+              "name": "search book by author",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "aa4a850d-88c9-4723-a563-3d31f768d68d",
+                    "exec": [
+                      "pm.test('Should return 200 OK', function () {",
+                      "  pm.response.to.have.status(200);",
+                      "});",
+                      "",
+                      "pm.test('Should return response in JSON format', function () {",
+                      "  pm.response.to.be.json;",
+                      "});",
+                      "",
+                      "const responseJson = pm.response.json();",
+                      "",
+                      "pm.test('Should return an array of books', function () {",
+                      "  pm.expect(responseJson).to.be.an('array');",
+                      "});",
+                      "",
+                      "pm.test('Should have at least one book in the response', function () {",
+                      "  pm.expect(responseJson.length).to.be.above(0);",
+                      "});",
+                      "",
+                      "pm.test('Should have required properties in each book', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    pm.expect(book).to.have.property('id');",
+                      "    pm.expect(book).to.have.property('title');",
+                      "    pm.expect(book).to.have.property('year');",
+                      "    pm.expect(book).to.have.property('price');",
+                      "    pm.expect(book).to.have.property('coverUrl');",
+                      "    pm.expect(book).to.have.property('available');",
+                      "    pm.expect(book).to.have.property('authors');",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should have valid types for book properties', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    pm.expect(book.id).to.be.a('number');",
+                      "    pm.expect(book.title).to.be.a('string');",
+                      "    pm.expect(book.year).to.be.a('number');",
+                      "    pm.expect(book.price).to.be.a('number');",
+                      "    pm.expect(book.coverUrl).to.be.a('string');",
+                      "    pm.expect(book.available).to.be.a('number');",
+                      "    pm.expect(book.authors).to.be.an('array');",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should have at least one author for each book', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    pm.expect(book.authors.length).to.be.above(0);",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should have valid author properties and types', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    book.authors.forEach(function (author) {",
+                      "      pm.expect(author).to.have.property('firstName');",
+                      "      pm.expect(author).to.have.property('lastName');",
+                      "      pm.expect(author.firstName).to.be.a('string');",
+                      "      pm.expect(author.lastName).to.be.a('string');",
+                      "    });",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should have valid coverUrl for each book', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "     pm.expect(book.coverUrl).to.match(/^https?:\\/\\/[\\w.-]+(?:\\.[\\w\\.-]+)+(?:[\\w\\-\\._~:/?#[\\]@!$&'()*+,;=]*)$/);",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should have positive price for each book', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    pm.expect(book.price).to.be.above(0);",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should have available as integer >= 0', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    pm.expect(Number.isInteger(book.available)).to.be.true;",
+                      "    pm.expect(book.available).to.be.at.least(0);",
+                      "  });",
+                      "});",
+                      "",
+                      "pm.test('Should not have duplicate book ids', function () {",
+                      "  const ids = responseJson.map(function (book) { return book.id; });",
+                      "  const uniqueIds = Array.from(new Set(ids));",
+                      "  pm.expect(ids.length).to.eql(uniqueIds.length);",
+                      "});",
+                      "",
+                      "pm.test('Should have non-empty author names', function () {",
+                      "  responseJson.forEach(function (book) {",
+                      "    book.authors.forEach(function (author) {",
+                      "      pm.expect(author.firstName).to.be.a('string').and.not.empty;",
+                      "      pm.expect(author.lastName).to.be.a('string').and.not.empty;",
+                      "    });",
+                      "  });",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "b2f78f3c-ed48-4c04-92b4-0b939b6b0a6c",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/books?author=Bloch",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "books"
+                  ],
+                  "query": [
+                    {
+                      "key": "author",
+                      "value": "Bloch"
+                    }
+                  ]
+                }
+              },
+              "response": [],
+              "createdAt": "2026-02-01T14:57:18.000Z",
+              "updatedAt": "2026-02-01T15:02:21.000Z",
+              "uid": "31090462-b2f78f3c-ed48-4c04-92b4-0b939b6b0a6c"
             }
           ],
           "id": "97773c2e-d47a-400a-8cb1-e0000f83192a",
           "createdAt": "2026-02-01T11:28:56.000Z",
-          "updatedAt": "2026-02-01T11:29:10.000Z",
+          "updatedAt": "2026-02-01T14:57:18.000Z",
           "uid": "31090462-97773c2e-d47a-400a-8cb1-e0000f83192a"
         }
       ],
