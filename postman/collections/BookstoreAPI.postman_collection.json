@@ -4,7 +4,7 @@
     "name": "BookstoreAPI",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "createdAt": "2026-01-08T11:03:17.000Z",
-    "updatedAt": "2026-02-02T11:48:17.000Z",
+    "updatedAt": "2026-02-02T15:01:03.000Z",
     "lastUpdatedBy": "31090462",
     "uid": "31090462-07568102-50ff-4814-95cd-8ac5e710d6ce"
   },
@@ -2694,7 +2694,7 @@
                 {
                   "listen": "test",
                   "script": {
-                    "id": "d0a53586-a2ab-4d19-b300-ba5f0ad2b7df",
+                    "id": "8f313496-5ac6-4c43-9b52-281f01f77e0d",
                     "exec": [
                       "pm.test(\"Should return status code 200\", function () {",
                       "    pm.response.to.have.status(200);",
@@ -2721,7 +2721,8 @@
                       "        pm.expect(book).to.have.property(\"title\").that.is.a(\"string\");",
                       "        pm.expect(book).to.have.property(\"year\").that.is.a(\"number\");",
                       "        pm.expect(book).to.have.property(\"price\").that.is.a(\"number\");",
-                      "        pm.expect(book).to.have.property(\"coverUrl\").that.is.a(\"string\");",
+                      "        pm.expect(book).to.have.property(\"coverUrl\");",
+                      "        pm.expect(book.coverUrl).to.satisfy(value => value === null || typeof value === \"string\");",
                       "        pm.expect(book).to.have.property(\"available\").that.is.a(\"number\");",
                       "        pm.expect(book).to.have.property(\"authors\").that.is.an(\"array\");",
                       "        book.authors.forEach(author => {",
@@ -2761,7 +2762,7 @@
                       "pm.test(\"Should have book coverUrl starting with http\", function () {",
                       "    const data = pm.response.json();",
                       "    data.forEach(book => {",
-                      "        pm.expect(book.coverUrl).to.match(/^http/);",
+                      "        pm.expect(book.coverUrl).to.satisfy(value => value === null || /^http/.test(value));",
                       "    });",
                       "});",
                       "",
@@ -2792,7 +2793,7 @@
                       "pm.test(\"Should have coverUrl ending with /file\", function () {",
                       "    const data = pm.response.json();",
                       "    data.forEach(book => {",
-                      "        pm.expect(book.coverUrl).to.match(/\\/file$/);",
+                      "        pm.expect(book.coverUrl).to.satisfy(value => value === null || /\\/file$/.test(value));",
                       "    });",
                       "});",
                       "",
@@ -2853,7 +2854,7 @@
               },
               "response": [],
               "createdAt": "2026-02-01T11:29:09.000Z",
-              "updatedAt": "2026-02-01T11:42:50.000Z",
+              "updatedAt": "2026-02-02T15:29:03.000Z",
               "uid": "31090462-ca2d2052-f15e-46bb-a22a-d60b73f85ab2"
             },
             {
@@ -3489,13 +3490,158 @@
           ],
           "id": "97773c2e-d47a-400a-8cb1-e0000f83192a",
           "createdAt": "2026-02-01T11:28:56.000Z",
-          "updatedAt": "2026-02-02T11:55:38.000Z",
+          "updatedAt": "2026-02-02T14:21:00.000Z",
           "uid": "31090462-97773c2e-d47a-400a-8cb1-e0000f83192a"
+        },
+        {
+          "name": "create and delete book",
+          "item": [
+            {
+              "name": "create a book with valid data",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "340fb53f-f635-4ee4-9f94-723d8f3c5007",
+                    "exec": [
+                      "pm.collectionVariables.set(\"colRandomBookTitle\", BookUtils.getRandomBookTitle());"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "33fa100a-86ee-47bf-9b28-c0d7c7f82307",
+                    "exec": [
+                      "pm.test('Should return 201 Created', function () {",
+                      "  pm.response.to.have.status(201);",
+                      "});",
+                      "",
+                      "pm.test('Should return response in JSON format', function () {",
+                      "  pm.response.to.be.json;",
+                      "});",
+                      "",
+                      "const responseJson = pm.response.json();",
+                      "",
+                      "pm.test('Should contain id', function () {",
+                      "  pm.expect(responseJson).to.have.property('id');",
+                      "});",
+                      "",
+                      "pm.test('Should have valid id type', function () {",
+                      "  pm.expect(responseJson.id).to.be.a('number');",
+                      "});",
+                      "",
+                      "pm.test('Should contain title', function () {",
+                      "  pm.expect(responseJson).to.have.property('title');",
+                      "});",
+                      "",
+                      "pm.test('Should have valid title type', function () {",
+                      "  pm.expect(responseJson.title).to.be.a('string');",
+                      "});",
+                      "",
+                      "pm.test('Should contain year', function () {",
+                      "  pm.expect(responseJson).to.have.property('year');",
+                      "});",
+                      "",
+                      "pm.test('Should have valid year type', function () {",
+                      "  pm.expect(responseJson.year).to.be.a('number');",
+                      "});",
+                      "",
+                      "pm.test('Should contain price', function () {",
+                      "  pm.expect(responseJson).to.have.property('price');",
+                      "});",
+                      "",
+                      "pm.test('Should have valid price type', function () {",
+                      "  pm.expect(responseJson.price).to.be.a('number');",
+                      "});",
+                      "",
+                      "pm.test('Should contain coverId', function () {",
+                      "  pm.expect(responseJson).to.have.property('coverId');",
+                      "});",
+                      "",
+                      "pm.test('Should allow null for coverId', function () {",
+                      "  pm.expect(responseJson.coverId === null || typeof responseJson.coverId === 'number').to.be.true;",
+                      "});",
+                      "",
+                      "pm.test('Should contain available', function () {",
+                      "  pm.expect(responseJson).to.have.property('available');",
+                      "});",
+                      "",
+                      "pm.test('Should have valid available type', function () {",
+                      "  pm.expect(responseJson.available).to.be.a('number');",
+                      "});",
+                      "",
+                      "pm.test('Should contain authors', function () {",
+                      "  pm.expect(responseJson).to.have.property('authors');",
+                      "});",
+                      "",
+                      "pm.test('Should have authors as array', function () {",
+                      "  pm.expect(responseJson.authors).to.be.an('array');",
+                      "});",
+                      "",
+                      "pm.test('Should have at least one author', function () {",
+                      "  pm.expect(responseJson.authors.length).to.be.above(0);",
+                      "});",
+                      "",
+                      "pm.test('Should have valid author object structure', function () {",
+                      "  responseJson.authors.forEach(function(author) {",
+                      "    pm.expect(author).to.have.property('id');",
+                      "    pm.expect(author.id).to.be.a('number');",
+                      "    pm.expect(author).to.have.property('firstName');",
+                      "    pm.expect(author.firstName).to.be.a('string');",
+                      "    pm.expect(author).to.have.property('lastName');",
+                      "    pm.expect(author.lastName).to.be.a('string');",
+                      "  });",
+                      "});"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "id": "112525d5-4e77-4840-949a-292e74c15504",
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "\n{\n    \"title\": \"{{colRandomBookTitle}}\",\n    \"authors\": [\n        10\n    ],\n    \"year\": 2022,\n    \"price\": 50,\n    \"available\": 100\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{baseUrl}}/books",
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "path": [
+                    "books"
+                  ]
+                }
+              },
+              "response": [],
+              "createdAt": "2026-02-02T14:59:50.000Z",
+              "updatedAt": "2026-02-02T15:03:37.000Z",
+              "uid": "31090462-112525d5-4e77-4840-949a-292e74c15504"
+            }
+          ],
+          "id": "b4d7ca23-a5fb-43fa-b5fa-6c158a6cb0a5",
+          "createdAt": "2026-02-02T14:59:29.000Z",
+          "updatedAt": "2026-02-02T14:59:50.000Z",
+          "uid": "31090462-b4d7ca23-a5fb-43fa-b5fa-6c158a6cb0a5"
         }
       ],
       "id": "3500a5a7-1f98-4cac-bed4-fa5eb777c734",
       "createdAt": "2026-02-01T11:28:41.000Z",
-      "updatedAt": "2026-02-01T11:28:56.000Z",
+      "updatedAt": "2026-02-02T14:59:29.000Z",
       "uid": "31090462-3500a5a7-1f98-4cac-bed4-fa5eb777c734"
     }
   ],
@@ -3503,7 +3649,7 @@
     {
       "listen": "prerequest",
       "script": {
-        "id": "6f3b15bb-448c-4ba2-83fe-0725d3aa30f9",
+        "id": "0b7253ed-70b2-442b-8913-c82b2348604f",
         "exec": [
           "AuthorUtils = {",
           "    sanitizeName(name) {",
@@ -3518,6 +3664,12 @@
           "    getRandomLastName() {",
           "        const rawLastName = pm.variables.replaceIn('{{$randomLastName}}');",
           "        return this.sanitizeName(rawLastName);",
+          "    }",
+          "}",
+          "",
+          "BookUtils = {",
+          "    getRandomBookTitle() {",
+          "        return pm.variables.replaceIn('{{$randomWords}}');",
           "    }",
           "}"
         ],
@@ -3562,6 +3714,11 @@
     {
       "key": "colAuthorId",
       "value": ""
+    },
+    {
+      "key": "colRandomBookTitle",
+      "value": "",
+      "type": "default"
     }
   ]
 }
